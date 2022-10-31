@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "LEM.h"
+#include "LEM.cpp"
 
 class Game
 {

@@ -1,3 +1,5 @@
+#include <SFML/Graphics.hpp>
+
 class LEM
 {
 private:
@@ -6,9 +8,10 @@ private:
     int xv;
     int yv;
     int a;
+    sf::RectangleShape shape;
 
 public:
     LEM();
-    ~LEM();
-    void draw();
+    void rotate(double a);
+    void draw(sf::RenderWindow &window);
 };
