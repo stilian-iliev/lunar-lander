@@ -1,9 +1,10 @@
-#include "Game.cpp"
+
+#include "GameController.cpp"
 
 int main()
 {
-    Game game = Game();
-    game.run();
-
-    return 0;
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Lunar Lander");
+    LunarLander lander(400, 500, 0);
+    GameController game(window, lander);
+    game.Run();
 }
