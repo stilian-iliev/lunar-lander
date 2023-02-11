@@ -1,0 +1,5 @@
+make header files
+make drawing of lander
+
+make singleton properties
+make lander get its own speeds from properties file

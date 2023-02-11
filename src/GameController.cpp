@@ -1,24 +1,29 @@
 #include <SFML/Graphics.hpp>
+#include "LunarSurface.cpp"
 #include "LunarLander.cpp"
+#include "Properties.cpp"
 
 class GameController
 {
 public:
-    GameController(sf::RenderWindow &window, LunarLander &lander)
-        : window_(window), lander_(lander) {}
+    GameController(sf::RenderWindow &window, LunarLander &lander, LunarSurface &surface, Properties &properties)
+        : window_(window), lander_(lander), surface_(surface), properties_(properties) {}
 
     void Run()
     {
-        float deltaTime = 1.0f / 60.0f; // Time step for simulation
+        sf::Clock clock;
+        sf::Time deltaTime;
+        float realDeltaTime;
+
         while (window_.isOpen())
         {
+            deltaTime = clock.restart();
+            realDeltaTime = deltaTime.asSeconds();
+
             HandleEvents();
-            HandleInput();
-            lander_.UpdatePosition(deltaTime, window_.getSize().x, window_.getSize().y);
-            if (lander_.GetX() < 0 || lander_.GetX() > 800 || lander_.GetY() < 0 || lander_.GetY() > 600)
-            {
-                window_.close();
-            }
+            HandleInput(realDeltaTime);
+            lander_.UpdatePosition(realDeltaTime, window_.getSize().x, window_.getSize().y);
+
             Render();
         }
     }
@@ -36,15 +41,15 @@ private:
         }
     }
 
-    void HandleInput()
+    void HandleInput(float realDeltaTime)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            lander_.Rotate(-0.01);
+            lander_.Rotate(-std::stof(properties_.getValue("lander_rotate_speed")), realDeltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            lander_.Rotate(0.01);
+            lander_.Rotate(std::stof(properties_.getValue("lander_rotate_speed")), realDeltaTime);
         }
     }
 
@@ -53,9 +58,22 @@ private:
         window_.clear();
         lander_.Draw(window_);
         lander_.DrawAlt(window_);
+        surface_.Draw(window_);
         window_.display();
     }
 
     sf::RenderWindow &window_;
     LunarLander &lander_;
+    LunarSurface &surface_;
+    Properties &properties_;
 };
+
+int main()
+{
+    Properties properties("config.ini");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Lunar Lander");
+    LunarLander lander(400, 500, 0);
+    LunarSurface surface(800, 600, 20);
+    GameController game(window, lander, surface, properties);
+    game.Run();
+}

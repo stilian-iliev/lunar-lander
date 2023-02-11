@@ -7,7 +7,7 @@ public:
     LunarLander(float x, float y, float angle)
         : x_(x), y_(y), angle_(angle), velocity_x_(0), velocity_y_(0) {}
 
-    void Rotate(float delta) { angle_ += delta; }
+    void Rotate(float delta, float deltaTime) { angle_ += delta * deltaTime; }
     void UpdatePosition(double delta_time, int window_width, int window_height)
     {
         velocity_y_ += 9.8 * delta_time;
@@ -38,6 +38,24 @@ public:
             velocity_y_ = 0;
         }
     }
+
+    // bool CheckCollision(const LunarSurface &surface)
+    // {
+    //     for (unsigned int i = 0; i < surface.surfacePoints.size() - 1; ++i)
+    //     {
+    //         sf::Vector2f surfaceA = surface.surfacePoints[i];
+    //         sf::Vector2f surfaceB = surface.surfacePoints[i + 1];
+    //         float slope = (surfaceB.y - surfaceA.y) / (surfaceB.x - surfaceA.x);
+    //         float yIntercept = surfaceA.y - slope * surfaceA.x;
+
+    //         float distance = abs(slope * position.x - position.y + yIntercept) / sqrt(pow(slope, 2) + 1);
+    //         if (distance < landerWidth / 2 && (position.x >= surfaceA.x && position.x <= surfaceB.x))
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     float GetX() const { return x_; }
     float GetY() const { return y_; }
